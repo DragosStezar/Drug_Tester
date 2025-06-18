@@ -1,0 +1,101 @@
+.footer {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 3rem 2rem;
+}
+
+.mainContent {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #34495e;
+}
+
+.brand {
+  max-width: 300px;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.brand p {
+  color: #bdc3c7;
+  line-height: 1.6;
+}
+
+.links {
+  display: flex;
+  gap: 4rem;
+}
+
+.links h4 {
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.links a {
+  display: block;
+  color: #bdc3c7;
+  text-decoration: none;
+  margin-bottom: 0.5rem;
+}
+
+.links a:hover {
+  color: #fff;
+}
+
+.legal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 2rem;
+  font-size: 0.9rem;
+  color: #bdc3c7;
+}
+
+.legal a {
+  color: #bdc3c7;
+  text-decoration: none;
+  margin-left: 1.5rem;
+}
+
+.legal a:hover {
+  color: #fff;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .mainContent {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .links {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .legal {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .legal div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .legal a {
+    margin-left: 0;
+  }
+} 

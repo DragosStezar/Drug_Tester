@@ -1,0 +1,75 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #fff;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: #0085CC;
+}
+
+.logoIcon {
+  height: 30px; /* You can adjust the size */
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+}
+
+.nav a {
+  margin: 0 1rem;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.nav a:hover {
+  color: #0085CC;
+}
+
+.hamburger {
+  display: none;
+  font-size: 2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Responsive Styles */
+@media (max-width: 820px) {
+  .nav {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 65px; /* Adjust based on header height */
+    left: 0;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 1rem 0;
+    text-align: center;
+  }
+
+  .navOpen {
+    display: flex;
+  }
+
+  .nav a {
+    margin: 1rem 0;
+    text-align: center;
+    width: 100%;
+  }
+
+  .hamburger {
+    display: block;
+  }
+} 
