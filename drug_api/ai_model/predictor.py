@@ -162,6 +162,19 @@ def debug_graph_nodes():
 # Apel de debug la import (poți comenta dacă nu vrei să vezi la fiecare reload)
 debug_graph_nodes()
 
+def debug_graph_nodes():
+    db_nodes = [n for n in nodes if n.startswith('DB')]
+    be_nodes = [n for n in nodes if n.startswith('BE')]
+    print(f"Total nodes: {len(nodes)}")
+    print(f"DrugBank nodes (DB...): {len(db_nodes)}")
+    print(f"Target nodes (BE...): {len(be_nodes)}")
+    print(f"Sample DB nodes: {db_nodes[:5]}")
+    print(f"Sample BE nodes: {be_nodes[:5]}")
+    return db_nodes, be_nodes
+
+# Apel de debug la import (poți comenta dacă nu vrei să vezi la fiecare reload)
+debug_graph_nodes()
+
 def predict_top_targets(drug_id: str, top_n=5):
     # Returnează top N interacțiuni cu target-uri (BE...) din graf
     scores = []
@@ -171,6 +184,7 @@ def predict_top_targets(drug_id: str, top_n=5):
         try:
             prob = predict_interaction(drug_id, target_id)
             scores.append({'target_id': target_id, 'probability': prob})
+                    scores.append({'target_id': target_id, 'probability': prob})
         except Exception:
             continue
     scores = sorted(scores, key=lambda x: x['probability'], reverse=True)
