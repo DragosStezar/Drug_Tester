@@ -36,7 +36,7 @@ class CheckDrugsView(APIView):
                     })
                     continue
                 # Top 5 interacțiuni drug-target (doar target_id-uri reale)
-                top_targets = predict_top_targets(drug_id, top_n=5)
+                top_targets = predict_top_targets(drug_id, top_n=6)
                 drug_name = drugbankid_to_name.get(drug_id)
                 results.append({
                     'drug_id': drug_id,
@@ -48,14 +48,18 @@ class CheckDrugsView(APIView):
 
 class DrugListView(APIView):
     def get(self, request):
+        query = request.GET.get('q', '').strip().lower()
         drugs = []
         with open(CSV_PATH, newline='', encoding='utf-8') as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
-                drugs.append({
-                    'drug_id': row['DrugBank ID'],
-                    'drug_name': row['Drug Name']
-                })
+                name = row['Drug Name']
+                drug_id = row['DrugBank ID']
+                if query:
+                    if query in name.lower():
+                        drugs.append({'drug_id': drug_id, 'drug_name': name})
+                else:
+                    drugs.append({'drug_id': drug_id, 'drug_name': name})
         # Elimină duplicatele după drug_id
         unique_drugs = {d['drug_id']: d for d in drugs}.values()
         return Response(list(unique_drugs))
