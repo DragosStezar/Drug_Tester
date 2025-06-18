@@ -18,11 +18,21 @@ def get_drugbankid_to_name():
             mapping[row['DrugBank ID']] = row['Drug Name']
     return mapping
 
+def get_targetid_to_name():
+    mapping = {}
+    with open(CSV_PATH, newline='', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            if row.get('Target ID') and row.get('Target Name'):
+                mapping[row['Target ID']] = row['Target Name']
+    return mapping
+
 class CheckDrugsView(APIView):
     def post(self, request):
         serializer = CheckDrugsSerializer(data=request.data)
         if serializer.is_valid():
             drugbankid_to_name = get_drugbankid_to_name()
+            targetid_to_name = get_targetid_to_name()
             # Construiește lista de nume medicamente pentru toți drug_id
             drug_names = [drugbankid_to_name.get(drug_id) for drug_id in serializer.validated_data['drug_ids'] if drugbankid_to_name.get(drug_id)]
             results = []
@@ -35,8 +45,12 @@ class CheckDrugsView(APIView):
                         'top_targets': []
                     })
                     continue
-                # Top 5 interacțiuni drug-target (doar target_id-uri reale)
+                # Top 6 interacțiuni drug-target (doar target_id-uri reale)
                 top_targets = predict_top_targets(drug_id, top_n=6)
+                # Adaugă și numele target-ului
+                for target in top_targets:
+                    target['target_name'] = targetid_to_name.get(target['target_id'], 'N/A')
+
                 drug_name = drugbankid_to_name.get(drug_id)
                 results.append({
                     'drug_id': drug_id,
