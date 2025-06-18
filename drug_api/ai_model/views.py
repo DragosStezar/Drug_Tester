@@ -3,7 +3,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .predictor import Predictor
-from .risks import RISKY_TARGETS
 from .alternatives import find_alternatives
 from .serializers import CheckDrugsSerializer
 
@@ -14,13 +13,16 @@ class CheckDrugsView(APIView):
             predictor = Predictor()
             results = []
             for drug_id in serializer.validated_data['drug_ids']:
-                predicted_target_id = predictor.predict_target(drug_id)
-                risky = predicted_target_id in RISKY_TARGETS
+                prediction = predictor.predict_target_and_risk(drug_id)
+                predicted_target_id = prediction['target_id']
+                risky = prediction.get('risky', False)
+                side_effects = prediction.get('side_effects', [])
                 alternatives = find_alternatives(predicted_target_id) if risky else []
                 results.append({
                     'drug_id': drug_id,
                     'predicted_target_id': predicted_target_id,
                     'risky': risky,
+                    'side_effects': side_effects,
                     'alternatives': alternatives
                 })
             return Response({'results': results})
