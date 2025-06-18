@@ -22,15 +22,10 @@ test_version = '5.1.13'
 
 def load_graph(v):
     G = nx.Graph()
-    with open(os.path.join(os.path.dirname(__file__), f'dti-{v}.csv'), encoding='utf-8') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            drug_id = row['DrugBank ID'].strip()
-            targets = row['Target Interactions'].split(';') if row['Target Interactions'] else []
-            for target_id in targets:
-                target_id = target_id.strip()
-                if drug_id and target_id:
-                    G.add_edge(drug_id, target_id)
+    with open(os.path.join(os.path.dirname(__file__), f'dti-{v}.csv')) as f:
+        for u, w, *_ in csv.reader(f):
+            if u and w:
+                G.add_edge(u.strip(), w.strip())
     return G
 
 graphs  = [load_graph(v) for v in train_versions + [test_version]]
@@ -147,24 +142,29 @@ def predict_target_and_risk(drug_id: str):
         'linked': best_prob > 0.5
     }
 
+def debug_graph_nodes():
+    db_nodes = [n for n in nodes if n.startswith('DB')]
+    be_nodes = [n for n in nodes if n.startswith('BE')]
+    print(f"Total nodes: {len(nodes)}")
+    print(f"DrugBank nodes (DB...): {len(db_nodes)}")
+    print(f"Target nodes (BE...): {len(be_nodes)}")
+    print(f"Sample DB nodes: {db_nodes[:5]}")
+    print(f"Sample BE nodes: {be_nodes[:5]}")
+    return db_nodes, be_nodes
+
+# Apel de debug la import (poți comenta dacă nu vrei să vezi la fiecare reload)
+debug_graph_nodes()
+
 def predict_top_targets(drug_id: str, top_n=5):
-    # Încarcă mapping target_id -> target_name din CSV
-    target_id_to_name = {}
-    with open(os.path.join(os.path.dirname(__file__), 'approved_drug_targets.csv'), newline='', encoding='utf-8') as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            target_id_to_name[row['Target ID']] = row['Target Name']
-    # Folosește doar target_id-urile care încep cu 'BE'
+    # Returnează top N interacțiuni cu alte DB... (medicamente) din graf
     scores = []
-    for target_id in target_id_to_name:
+    for target_id in nodes:
+        if not target_id.startswith('DB') or target_id == drug_id:
+            continue
         try:
             prob = predict_interaction(drug_id, target_id)
-            scores.append({'target_id': target_id, 'target_name': target_id_to_name[target_id], 'probability': prob})
+            scores.append({'target_id': target_id, 'probability': prob})
         except Exception:
             continue
-    # Sortează descrescător după probabilitate
     scores = sorted(scores, key=lambda x: x['probability'], reverse=True)
     return scores[:top_n]
-
-print("DB00002 in nodes:", "DB00002" in nodes)
-print("BE0000048 in nodes:", "BE0000048" in nodes)
