@@ -20,4 +20,14 @@
   flex-wrap: wrap;
   gap: 1.5rem;
   justify-content: center;
-} 
+}
+
+.message {
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 2rem;
+}
+
+.error {
+  color: #d9534f; /* A shade of red */
+}

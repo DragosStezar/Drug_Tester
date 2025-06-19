@@ -70,7 +70,7 @@ class DrugListView(APIView):
                 name = row['Drug Name']
                 drug_id = row['DrugBank ID']
                 if query:
-                    if query in name.lower():
+                    if name.lower().startswith(query):
                         drugs.append({'drug_id': drug_id, 'drug_name': name})
                 else:
                     drugs.append({'drug_id': drug_id, 'drug_name': name})

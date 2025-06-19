@@ -29,6 +29,11 @@
   align-items: center;
 }
 
+.searchInputWrapper {
+  position: relative;
+  width: 100%;
+}
+
 .searchInput {
   width: 100%;
   padding: 1rem;
@@ -36,6 +41,32 @@
   border: 1px solid #ccc;
   border-radius: 5px;
   margin-bottom: 1rem;
+}
+
+.suggestionsList {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 5px 5px;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 9999;
+}
+
+.suggestionsList li {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+}
+
+.suggestionsList li:hover {
+  background-color: #f0f0f0;
 }
 
 .buttons {
@@ -54,6 +85,11 @@
   font-weight: 500;
 }
 
+.computeButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
 .computeButton:hover {
   background-color: #0056b3;
-} 
+}
